@@ -1,0 +1,6 @@
+{:paths ["src"]
+ :tasks {:requires ([dreams.core :as dr]
+                    [babashka.fs :as fs])
+         book (dr/-main)
+         random (println (dr/random-dream-str))
+         count (println (dr/num-dreams))}}
