@@ -1,6 +1,11 @@
 {:paths ["src"]
  :tasks {:requires ([dreams.core :as dr]
                     [babashka.fs :as fs])
-         book (dr/-main)
+         book (dr/generate-book)
+         install-book {:task (dr/install-book)
+                       :depends [book]}
+         years (dr/print-years)
+         dates (dr/print-dates)
+         words (dr/dreamwords)
          random (println (dr/random-dream-str))
          count (println (dr/num-dreams))}}

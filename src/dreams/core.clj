@@ -133,6 +133,26 @@ Zealanders.
        (map :year)
        distinct))
 
+(defn print-years []
+  (doseq [yr (dream-years (->> dreams-path
+                               slurp
+                               parse-dreams))]
+    (println yr)))
+
+(defn wrap-n-columns [n s]
+  (str/join
+   "\n"
+   (map #(str/join " " %)
+        (partition n (str/split s #"\s+")))))
+
+(defn print-dates []
+  (let [dates (->> dreams-path
+                   slurp
+                   parse-dreams
+                   (map :date))
+        dates-str (str/join " " (map format-date dates))]
+    (println (wrap-n-columns 6 dates-str))))
+
 (defn dreams-for-year [year dreams]
   (filter (comp #{year} #(.getYear %) :date)
           dreams))
@@ -147,33 +167,30 @@ Zealanders.
                                       (format-date (:date dr))
                                       (:id dr))))))))
 
-(comment
-  ;; Years
-  (->> dreams-path
-       slurp
-       parse-dreams
-       (map :year)
-       distinct)
-  ;;=>
-  '(1998 2000 2002 2011 2017 2019 2021 2022 2023 2024)
+(defn nopunct [s]
+  (str/replace s #"[,-\.\?\\\[\]\(\)\-–\"“”$’]*" "" ))
 
-  ;; Days
-  (->> dreams-path
-       slurp
-       parse-dreams
-       (map :date)
-       count)
-  ;;=>
-  148
+(defn normalize [w]
+  (->> w
+       str/lower-case
+       nopunct))
 
-  ;; TOC
-  (println
-   (->> dreams-path
-        slurp
-        parse-dreams
-        toc-str))
-  )
-
+(defn dreamwords []
+  (let [dreams (->> dreams-path
+                    slurp
+                    parse-dreams)
+        tokens (->> dreams
+                    (map :txt)
+                    (mapcat #(str/split % #"\s+|\-"))
+                    (map normalize))]
+    (println (->> tokens
+                  frequencies
+                  (sort-by second)
+                  reverse
+                  (map first)
+                  (take 300)
+                  (str/join " ")
+                  (wrap-n-columns 10)))))
 
 (defn format-date-for-section [d]
   (format "%s, %s %d, %d"
@@ -218,7 +235,7 @@ Zealanders.
                     parse-dreams)]
     (format-dream (rand-nth dreams))))
 
-(defn -main []
+(defn generate-book []
   (let [dreams (->> dreams-path
                     slurp
                     parse-dreams)]
@@ -234,11 +251,8 @@ Zealanders.
 
     (println (format "Saved %d dreams to %s."
                      (count dreams)
-                     epub-output)))
+                     epub-output))))
 
-  ;; (println (sh/sh "open" "-a" "/Applications/calibre.app" epub-output))
-
-  )
-
-(when (= *file* (System/getProperty "babashka.file"))
-  (-main))
+(defn install-book []
+  (println (sh/sh "open" "-a" "/Applications/calibre.app" epub-output))
+  (println (sh/sh "open" epub-output)))
