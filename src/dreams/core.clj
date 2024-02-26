@@ -4,11 +4,11 @@
   [clojure.java.shell :as sh]))
 
 (import '[java.time LocalDate]
-        '[java.time.format DateTimeFormatter]
-        '[java.util Locale])
+        '[java.time.format DateTimeFormatter])
 
 (def org-dir (str (System/getenv "HOME") "/org"))
 (def dreams-path (str org-dir "/dreams.org"))
+(def md-path (str org-dir "/dreams.md"))
 (def cover-image (str org-dir "/dreams-cover.png"))
 (def epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
 
@@ -134,10 +134,14 @@ Zealanders.
        distinct))
 
 (defn print-years []
-  (doseq [yr (dream-years (->> dreams-path
-                               slurp
-                               parse-dreams))]
-    (println yr)))
+  (let [year-counts (->> dreams-path
+                         slurp
+                         parse-dreams
+                         (group-by :year)
+                         (sort-by first)
+                         (map (juxt first (comp count second))))]
+    (doseq [[yr cnt] year-counts]
+      (println (format "%d: %d" yr cnt)))))
 
 (defn wrap-n-columns [n s]
   (str/join
@@ -235,23 +239,23 @@ Zealanders.
                     parse-dreams)]
     (format-dream (rand-nth dreams))))
 
-(defn generate-book []
+(defn org->md []
   (let [dreams (->> dreams-path
                     slurp
                     parse-dreams)]
-    (spit "/tmp/dreams.md" (dreams-as-md dreams))
+    (spit md-path (dreams-as-md dreams))))
 
-    (println (sh/sh "ebook-convert"
-                    "/tmp/dreams.md"
-                    epub-output
-                    "--output-profile=tablet"
-                    (str "--cover=" cover-image)
-                    "--authors=Eig N. Hombre"
-                    "--title=eBook of Dreams"))
-
-    (println (format "Saved %d dreams to %s."
-                     (count dreams)
-                     epub-output))))
+(defn md->epub []
+  (let [{:keys [exit out err]}
+        (sh/sh "ebook-convert"
+               md-path
+               epub-output
+               "--output-profile=tablet"
+               (str "--cover=" cover-image)
+               "--authors=Eig N. Hombre"
+               "--title=eBook of Dreams")]
+    (assert (zero? exit) (str "Error: " err))
+    (println out)))
 
 (defn install-book []
   (println (sh/sh "open" "-a" "/Applications/calibre.app" epub-output))
