@@ -141,7 +141,10 @@ Zealanders.
                          (sort-by first)
                          (map (juxt first (comp count second))))]
     (doseq [[yr cnt] year-counts]
-      (println (format "%d: %d" yr cnt)))))
+      (println (format "%d: %3d%s"
+                       yr
+                       cnt
+                       (str/join "" (repeat cnt ".")))))))
 
 (defn wrap-n-columns [n s]
   (str/join
