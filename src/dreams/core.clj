@@ -4,7 +4,8 @@
   [clojure.java.shell :as sh]))
 
 (import '[java.time LocalDate]
-        '[java.time.format DateTimeFormatter])
+        '[java.time.format DateTimeFormatter TextStyle]
+        '[java.util Locale])
 
 (def org-dir (str (System/getenv "HOME") "/org"))
 (def dreams-path (str org-dir "/dreams.org"))
@@ -128,6 +129,12 @@ Zealanders.
        :id (format-date-as-id d)
        :txt txt})))
 
+(defn month-name [month]
+  (.getDisplayName month TextStyle/FULL Locale/US))
+
+(defn year-months [date]
+  [(-> date .getYear) (month-name date)])
+
 (defn dream-years [dreams]
   (->> dreams
        (map :year)
@@ -152,6 +159,9 @@ Zealanders.
    (map #(str/join " " %)
         (partition n (str/split s #"\s+")))))
 
+(defn dream-dates [dreams]
+  (map :date dreams))
+
 (defn print-dates []
   (let [dates (->> dreams-path
                    slurp
@@ -164,15 +174,28 @@ Zealanders.
   (filter (comp #{year} #(.getYear %) :date)
           dreams))
 
+(defn dreams-for-year-month [year month dreams]
+  (filter #(and (= year (.getYear (:date %)))
+                (= month (month-name (.getMonth (:date %)))))
+          dreams))
+
+(defn year-months [dates]
+  (->> dates
+       (map (juxt #(.getYear %) (comp month-name #(.getMonth %))))
+       distinct
+       (partition-by first)
+       (map (juxt ffirst (partial map second)))))
+
 (defn toc-str [dreams]
-  (str/join
-   "\n"
-   (for [yr (dream-years dreams)]
-     (str/join "\n" (concat [(format "- [%s](#%s)" yr yr)]
-                            (for [dr (dreams-for-year yr dreams)]
-                              (format "    - [%s](#%s)"
-                                      (format-date (:date dr))
-                                      (:id dr))))))))
+  (let [ym (year-months (dream-dates dreams))]
+    (str
+      (str/join
+      "\n"
+      (for [[yr months] ym]
+        (str/join "\n" (concat [(format "- [%s](#%s)" yr yr)]
+                                (for [m months]
+                                  (format "    - [%s](#%s-%s)"
+                                          m yr m)))))))))
 
 (defn nopunct [s]
   (str/replace s #"[,-\.\?\\\[\]\(\)\-–\"“”$’]*" "" ))
@@ -213,18 +236,21 @@ Zealanders.
     (:txt dream)]))
 
 (defn format-dreams [dreams]
-  (let [years (dream-years dreams)]
+  (let [yrs-mos (year-months (dream-dates dreams))]
     (str/join
      "\n\n"
-     (for [yr years]
-       (str (format "# <a name=\"%s\"></a>%s\n\n" yr yr)
+     (for [[yr mos] yrs-mos]
+       (str (format "# %s\n\n" yr)
             (str/join
              "\n"
-             (for [{:keys [date id txt]} (dreams-for-year yr dreams)]
-               (format "## <a name=\"%s\"></a>%s\n\n%s"
-                       id
-                       (format-date-for-section date)
-                       txt))))))))
+             (for [mo mos]
+                (str (format "## <a name=\"%s-%s\"></a>\n\n"
+                             yr mo)
+                     (str/join "\n"
+                               (for [{:keys [date id txt]} (dreams-for-year-month yr mo dreams)]
+                                 (format "### %s\n\n%s"
+                                          (format-date-for-section date)
+                                          txt)))))))))))
 
 (defn dreams-as-md [dreams]
   (let [toc (toc-str dreams)]
