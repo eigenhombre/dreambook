@@ -1,5 +1,6 @@
 {:paths ["src"]
  :tasks {:requires ([dreams.core :as dr]
+                    [dreams.new :as ndr]
                     [babashka.fs :as fs])
          -book-file {:task "/Users/jacobsen/desktop/dreams.epub"}
          -org-path {:task "/Users/jacobsen/org/dreams.org"}
@@ -12,10 +13,12 @@
          count (println (dr/num-dreams))
          ;; Generating the book:
          md {:depends [-org-path -md-path]
-             :task (dr/org->md)}
+             :task (dr/spit-md)}
+         nb {:depends [-org-path -md-path]
+             :task (ndr/main)}
          book {:depends [md -md-path -book-file]
                :task (when
-                       (seq (fs/modified-since
+                         (seq (fs/modified-since
                                -book-file
                                -md-path))
                        (dr/md->epub))}
