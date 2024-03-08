@@ -1,21 +1,14 @@
 {:paths ["src"]
- :tasks {:requires ([dreams.core :as dr]
-                    [dreams.new :as ndr]
+ :tasks {:requires ([dreams.main :as dr]
                     [babashka.fs :as fs])
          -book-file {:task "/Users/jacobsen/desktop/dreams.epub"}
          -org-path {:task "/Users/jacobsen/org/dreams.org"}
          -md-path {:task "/Users/jacobsen/org/dreams.md"}
          ;; Utilities:
-         years (dr/print-years)
-         dates (dr/print-dates)
          words (dr/dreamwords)
          random (println (dr/random-dream-str))
-         count (println (dr/num-dreams))
-         ;; Generating the book:
          md {:depends [-org-path -md-path]
-             :task (dr/spit-md)}
-         nb {:depends [-org-path -md-path]
-             :task (ndr/main)}
+             :task (dr/main)}
          book {:depends [md -md-path -book-file]
                :task (when
                          (seq (fs/modified-since

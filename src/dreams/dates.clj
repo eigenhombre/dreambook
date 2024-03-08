@@ -1,7 +1,7 @@
 (ns dreams.dates
-  (:require [clojure.string :as str]
-            [dreams.org :as org]
-            [clojure.java.shell :as sh]))
+  (:require [clojure.java.shell :as sh]
+            [clojure.string :as str]
+            [dreams.org :as org]))
 
 (import '[java.time LocalDate]
         '[java.time.format DateTimeFormatter TextStyle]
