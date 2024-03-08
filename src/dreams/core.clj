@@ -121,6 +121,8 @@
   (-> s
       (str/replace #"/([^/]+?)/" "*$1*")
       (str/replace #"--" "–")
+      (str/replace #"<<" "«")
+      (str/replace #">>" "»")
       (str/replace #"=([^=]+?)=" "`$1`")))
 
 (defn format-dreams [dreams]
