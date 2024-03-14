@@ -1,1 +1,5 @@
+*.epub
 .nrepl-port
+META-INF
+epub
+mimetype

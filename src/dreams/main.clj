@@ -2,7 +2,10 @@
   (:require [clojure.java.shell :as sh]
             [clojure.string :as str]
             [dreams.dates :as d]
-            [dreams.parse :as p]))
+            [dreams.epub :as epub]
+            [dreams.md :refer [org->md]]
+            [dreams.model :as m]
+            [dreams.util :refer [wrap-n-columns nopunct normalize]]))
 
 (def org-dir (str (System/getenv "HOME") "/org"))
 (def dreams-path (str org-dir "/dreams.org"))
@@ -10,27 +13,8 @@
 (def cover-image (str org-dir "/dreams-cover.png"))
 (def epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
 
-(defn- org->md [s]
-  ;; Convert Org `/s/` to MD `*s*`:
-  (-> s
-      (str/replace #"/([^/]+?)/" "*$1*")
-      (str/replace #"--" "–")
-      (str/replace #"<<" "«")
-      (str/replace #">>" "»")
-      (str/replace #"=([^=]+?)=" "`$1`")))
-
-(defn- year-months [dates]
-  (->> dates
-       (map (juxt #(.getYear %) (comp d/month-name #(.getMonth %))))
-       distinct
-       (partition-by first)
-       (map (juxt ffirst (partial map second)))))
-
-(defn- dream-dates [dreams]
-  (map :date dreams))
-
 (defn- toc-str [dreams]
-  (let [ym (year-months (dream-dates dreams))]
+  (let [ym (d/year-months (m/dream-dates dreams))]
     (str
      (str/join
       "\n"
@@ -40,22 +24,8 @@
                                  (format "    - [%s](#%s-%s)"
                                          m yr m)))))))))
 
-
-(defn- dreams-for-year-month [year month dreams]
-  (filter #(and (= year (.getYear (:date %)))
-                (= month (d/month-name (.getMonth (:date %)))))
-          dreams))
-
-
-(defn- year-months [dates]
-  (->> dates
-       (map (juxt #(.getYear %) (comp d/month-name #(.getMonth %))))
-       distinct
-       (partition-by first)
-       (map (juxt ffirst (partial map second)))))
-
-(defn- format-dreams [dreams]
-  (let [yrs-mos (year-months (dream-dates dreams))]
+(defn- format-dreams-md [dreams]
+  (let [yrs-mos (d/year-months (m/dream-dates dreams))]
     (str/join
      "\n\n"
      (for [[yr mos] yrs-mos]
@@ -68,14 +38,14 @@
                     (str/join
                      "\n"
                      (for [{:keys [date id txt]}
-                           (dreams-for-year-month yr mo dreams)]
+                           (m/dreams-for-year-month yr mo dreams)]
                        (format "### %s\n\n%s"
                                (d/format-date-for-section date)
                                (org->md txt))))))))))))
 
 (defn- dreams-as-md [dreams]
   (let [toc (toc-str dreams)]
-    (str toc "\n\n" (format-dreams dreams))))
+    (str toc "\n\n" (format-dreams-md dreams))))
 
 (defn- spit-md [parsed-dreams]
   (spit md-path (dreams-as-md parsed-dreams)))
@@ -92,20 +62,6 @@
                        (str/join "" (repeat cnt ".")))))
     (println (format "TOTAL: %d" (count parsed-dreams)))))
 
-(defn- wrap-n-columns [n s]
-  (str/join
-   "\n"
-   (map #(str/join " " %)
-        (partition n (str/split s #"\s+")))))
-
-(defn- nopunct [s]
-  (str/replace s #"[,-\.\?\\\[\]\(\)\-–\"“”$’]*" ""))
-
-(defn- normalize [w]
-  (->> w
-       str/lower-case
-       nopunct))
-
 (defn- format-single-dream [dream]
   (str/join
    "\n"
@@ -115,13 +71,13 @@
 (defn random-dream-str []
   (let [dreams (->> dreams-path
                     slurp
-                    p/parse-dreams)]
+                    m/parse-dreams)]
     (format-single-dream (rand-nth dreams))))
 
 (defn dreamwords []
   (let [dreams (->> dreams-path
                     slurp
-                    p/parse-dreams)
+                    m/parse-dreams)
         tokens (->> dreams
                     (map :txt)
                     (mapcat #(str/split % #"\s+|\-"))
@@ -135,7 +91,7 @@
                   (str/join " ")
                   (wrap-n-columns 10)))))
 
-(defn md->epub []
+(defn md->epub-OLD []
   (let [{:keys [exit out err]}
         (sh/sh "ebook-convert"
                md-path
@@ -154,6 +110,7 @@
 (defn main []
   (let [parsed-dreams (->> dreams-path
                            slurp
-                           p/parse-dreams)]
+                           m/parse-dreams)]
     (spit-md parsed-dreams)
+    (epub/mk-epub parsed-dreams)
     (print-years parsed-dreams)))

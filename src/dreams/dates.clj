@@ -34,5 +34,9 @@
 (defn month-name [month]
   (.getDisplayName month TextStyle/FULL Locale/US))
 
-(defn year-months [date]
-  [(-> date .getYear) (month-name date)])
+(defn- year-months [dates]
+  (->> dates
+       (map (juxt #(.getYear %) (comp month-name #(.getMonth %))))
+       distinct
+       (partition-by first)
+       (map (juxt ffirst (partial map second)))))
