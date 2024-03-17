@@ -114,3 +114,9 @@
     (spit-md parsed-dreams)
     (epub/mk-epub parsed-dreams)
     (print-years parsed-dreams)))
+
+(defn newmd []
+  (let [txt (slurp dreams-path)
+        md (org->md txt)
+        outfile (str (System/getenv "HOME") "/Desktop/dreams.md")]
+    (spit outfile md)))

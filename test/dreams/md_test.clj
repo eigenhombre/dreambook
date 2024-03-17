@@ -3,11 +3,32 @@
             [dreams.md :as md]))
 
 (deftest test-md
-  (testing "md->html"
+  (testing "org->md"
     (are [input expected]
       (= expected (md/org->md input))
       "foo" "foo"
       "" ""
       "/hello/" "*hello*"
-      " /hello/ " " *hello* "
-      "a/b" "a/b")))
+      " /hello/ /there/ " " *hello* *there* "
+      " /hello there/ " " *hello there* "
+      "a/b" "a/b"
+      " a/b/c " " a/b/c "
+      "* a\n" "# a\n"
+      "* a\nb\n" "# a\nb\n"
+      "* a\nb d ee f\n" "# a\nb d ee f\n"
+      "* a\n* b\n" "# a\n# b\n"
+      "* a\n** b\n" "# a\n## b\n"
+      "* a\n** b\n* c\n" "# a\n## b\n# c\n"
+      "* a\n** b\n* c\n** d\n" "# a\n## b\n# c\n## d\n"
+      "* a\n** b\n* c\n** d\n* e\n" "# a\n## b\n# c\n## d\n# e\n"
+      "*** a\n" "### a\n"
+      "=code=" "`code`"
+      " =code= " " `code` "
+      ;; Stripping frontmatter:
+      "#+TITLE: Dreams
+#+DATE: <2017-08-29 Tue>
+#+OPTIONS: toc:nil num:nil
+
+# Introduction" "# Introduction"
+      ;; Parsing dates:
+      "* <1987-01-12 Mon>\n" "# Monday, January 12, 1987\n")))

@@ -3,7 +3,8 @@
             [clojure.data.xml :as xml]
             [clojure.string :as str]
             [dreams.dates :as d]
-            [dreams.model :as m]))
+            [dreams.model :as m]
+            [dreams.org :as org]))
 
 (defn- strip-odd-c-or-d [s]
   (str/replace s #"xmlns:.=" "xmlns="))
@@ -142,7 +143,6 @@
                    (file-seq (fs/file cdir))
                    ["mimetype"])))
 
-
 (defn generate-epub [bookname title author image-file chapters]
   (let [cdir "epub"
         uid (uuid)
@@ -167,7 +167,6 @@
                   (apply clojure.java.shell/sh))))
   (println (format "EPUB '%s' generated successfully."
                    bookname)))
-
 
 ;; (generate-epub "book.epub"
 ;;                "From Bohm to Loess"
@@ -202,11 +201,6 @@
         chapters (make-chapters dreams)
         org-dir (str (System/getenv "HOME") "/org")
         cover-image (str org-dir "/dreams-cover.png")]
-    ;; (rmrf cdir "META-INF" "mimetype")
-    ;; (mkdirp "META-INF")
-    ;; (spit "mimetype" "application/epub+zip")
-    ;;(clojure.pprint/pprint chapters)
-    ;;(prn (d/year-months (m/dream-dates dreams)))
     (generate-epub "dreams.epub"
                    "Dreams"
                    "Eig N. Hombre"

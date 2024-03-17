@@ -7,7 +7,12 @@
         '[java.time.format DateTimeFormatter TextStyle]
         '[java.util Locale])
 
+(def org-date-pattern #"(<\d{4}-\d{2}-\d{2}.+?>)")
+
 (def ^:private fmt (DateTimeFormatter/ofPattern "<yyyy-MM-dd EEE>"))
+
+(defn matches-date [s]
+  (re-matches org-date-pattern s))
 
 (defn parse-date [s]
   (LocalDate/parse s fmt))

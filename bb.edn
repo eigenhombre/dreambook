@@ -1,6 +1,7 @@
 {:paths ["src" "test"]
  :tasks {:requires ([dreams.main :as dr]
                     [dreams.md-test]
+                    [dreams.test-runner]
                     [babashka.fs :as fs])
          -book-file {:task "/Users/jacobsen/desktop/dreams.epub"}
          -org-path {:task "/Users/jacobsen/org/dreams.org"}
@@ -10,6 +11,9 @@
          random (println (dr/random-dream-str))
          md {:depends [-org-path -md-path]
              :task (dr/main)}
+         nmd {:depends [-org-path -md-path]
+              :task (dr/newmd)
+              :watch [-org-path]}
          book {:depends [md -md-path -book-file]
                :task (when (seq (fs/modified-since
                                  -book-file
@@ -17,7 +21,4 @@
                        (dr/md->epub-OLD))}
          install-book {:task (dr/install-book)
                        :depends [book]}
-         test (do
-                (require 'clojure.test)
-                (clojure.test/run-tests 'dreams.md-test)
-                (println "OK"))}}
+         test {:task (dreams.test-runner/run-tests)}}}

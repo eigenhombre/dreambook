@@ -28,7 +28,6 @@ A few dreams – Looking at a world map and drinking milk with New
 Zealanders.
 "))
 
-
 (defn vec*
   "
   Like list*, but for vectors.  (vec* :a :b [:c :d]) => [:a :b :c :d].
