@@ -11,6 +11,8 @@
       "/hello/" "*hello*"
       " /hello/ /there/ " " *hello* *there* "
       " /hello there/ " " *hello there* "
+      " /City/. " " *City*. "
+      " /dead/.\" " " *dead*.\" "
       "a/b" "a/b"
       " a/b/c " " a/b/c "
       "* a\n" "# a\n"

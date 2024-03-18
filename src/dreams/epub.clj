@@ -1,8 +1,10 @@
 (ns dreams.epub
   (:require [babashka.fs :as fs]
+            [babashka.process :as sh]
             [clojure.data.xml :as xml]
             [clojure.string :as str]
             [dreams.dates :as d]
+            [dreams.html :as html]
             [dreams.model :as m]
             [dreams.org :as org]))
 
@@ -73,27 +75,24 @@
                [:title ~title]]
               [:body
                [:h1 ~title]
-               [:p ~content]]]]
-    (normalize-xml (xml/indent-str (xml/sexp-as-element doc)))))
-
-(defn- mkdirp [& paths]
-  (doseq [path paths]
-    (clojure.java.shell/sh "mkdir" "-p" path)))
-
-(defn- rmrf [& paths]
-  (doseq [path paths]
-    (when-not (.startsWith (str path) "/")
-      (clojure.java.shell/sh "rm" "-rf" path))))
+               [:p "CONTENT"]]]
+        envelope (-> doc
+                     xml/sexp-as-element
+                     xml/indent-str
+                     normalize-xml)]
+    (str/replace envelope "CONTENT" (html/md->html
+                                     content))))
 
 (defn- container-xml [cdir]
-  (normalize-xml (xml/indent-str
-                  (xml/sexp-as-element
-                   [:container
-                    {:version "1.0"
-                     :xmlns "urn:oasis:names:tc:opendocument:xmlns:container"}
-                    [:rootfiles
-                     [:rootfile {:full-path (str cdir "/content.opf")
-                                 :media-type "application/oebps-package+xml"}]]]))))
+  (normalize-xml
+   (xml/indent-str
+    (xml/sexp-as-element
+     [:container
+      {:version "1.0"
+       :xmlns "urn:oasis:names:tc:opendocument:xmlns:container"}
+      [:rootfiles
+       [:rootfile {:full-path (str cdir "/content.opf")
+                   :media-type "application/oebps-package+xml"}]]]))))
 
 (defn- toc-ncx [title uid chapters]
   (normalize-xml
@@ -138,39 +137,48 @@
                              ".xhtml")}
                     chapname]])]]]]))))
 
-(defn- files-to-zip [cdir]
-  (map str (concat (file-seq (fs/file "META-INF"))
-                   (file-seq (fs/file cdir))
-                   ["mimetype"])))
+(def ^:private cdir-name "epub")
+(def ^:private basedir (fs/create-temp-dir "mybook"))
+(defn- bpath [& els] (apply (partial fs/file basedir) els))
+(defn- cpath [& els] (apply (partial fs/file basedir cdir-name) els))
+(defn- cspit [f s] (spit (cpath f) s))
+(defn- zipfiles []
+  (str/split (:out (sh/shell {:dir (bpath)
+                              :out :string
+                              :err :string}
+                             "find" "mimetype" "META-INF" cdir-name))
+             #"\s+"))
 
 (defn generate-epub [bookname title author image-file chapters]
-  (let [cdir "epub"
-        uid (uuid)
-        cspit (fn [f c] (spit (str cdir "/" f) c))]
-    (rmrf cdir "META-INF" "mimetype")
-    (mkdirp "META-INF")
-    (spit "mimetype" "application/epub+zip")
-    (mkdirp cdir (str cdir "/text") (str cdir "/images"))
-    (spit "META-INF/container.xml" (container-xml cdir))
+  (let [uid (uuid)]
+    (fs/create-dirs (bpath "META-INF"))
+    (spit (bpath "mimetype") "application/epub+zip")
+    (fs/create-dirs (cpath "text"))
+    (fs/create-dirs (cpath "images"))
+    (spit (bpath "META-INF/container.xml") (container-xml cdir-name))
     (cspit "content.opf" (opf title author uid chapters))
-    (fs/copy image-file (str cdir "/images/cover.png"))
+    (fs/copy image-file (cpath "images/cover.png"))
     (doseq [[chapname content] chapters]
       (cspit (str "text/" (chaplink chapname) ".xhtml")
              (chapter chapname content)))
     (cspit "toc.ncx" (toc-ncx title uid chapters))
     (cspit "toc.xhtml" (toc-xhtml title chapters))
-    (println (->> cdir
-                  files-to-zip
-                  (cons "book.epub")
-                  (cons "-q")
-                  (cons "zip")
-                  (apply clojure.java.shell/sh))))
-  (println (format "EPUB '%s' generated successfully."
-                   bookname)))
-
-;; (generate-epub "book.epub"
-;;                "From Bohm to Loess"
-;;                "Eig N. Hombre")
+    (println (bpath))
+    (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
+    ;;    (prn (zipfiles))
+    (prn (apply sh/shell
+                {:dir (bpath)
+                 :out :string
+                 :err :string}
+                "zip"
+                "-q"
+                "book.epub"
+                "mimetype"
+                (zipfiles)))
+    (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
+    (fs/copy (bpath "book.epub") "." {:replace-existing true})
+    (println (format "EPUB '%s' generated successfully."
+                     bookname))))
 
 (def ^:private chapters
   [["Introduction"
@@ -193,10 +201,7 @@
                              txt)))]))))
 
 (defn mk-epub [dreams]
-  (let [#_#_chapters (->> dreams
-                          (take 1000)
-                          (map (juxt :id :txt)))
-        dates (m/dream-dates dreams)
+  (let [dates (m/dream-dates dreams)
         year-months (d/year-months dates)
         chapters (make-chapters dreams)
         org-dir (str (System/getenv "HOME") "/org")

@@ -107,6 +107,14 @@
   (println (sh/sh "open" "-a" "/Applications/calibre.app" epub-output))
   (println (sh/sh "open" epub-output)))
 
+(defn newpub []
+  (let [parsed-dreams (->> dreams-path
+                           slurp
+                           m/parse-dreams)]
+    (spit-md parsed-dreams)
+    (epub/mk-epub parsed-dreams)
+    (print-years parsed-dreams)))
+
 (defn main []
   (let [parsed-dreams (->> dreams-path
                            slurp
