@@ -165,9 +165,6 @@
              (chapter chapname content)))
     (cspit "toc.ncx" (toc-ncx title uid chapters))
     (cspit "toc.xhtml" (toc-xhtml title chapters))
-    (println (bpath))
-    (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
-    ;;    (prn (zipfiles))
     (prn (apply sh/shell
                 {:dir (bpath)
                  :out :string
@@ -177,7 +174,7 @@
                 "book.epub"
                 "mimetype"
                 (zipfiles)))
-    (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
+    ;; (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
     (fs/copy (bpath "book.epub") "." {:replace-existing true})
     (println (format "EPUB '%s' generated successfully."
                      bookname))))
