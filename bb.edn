@@ -1,9 +1,7 @@
 {:paths ["src" "test"]
  :tasks {:requires ([dreams.main :as dr]
-                    [dreams.md-test]
-                    [dreams.test-runner]
-                    [babashka.process :as sh]
-                    [babashka.fs :as fs])
+                    [dreams.test-runner :as tr]
+                    [babashka.process :as sh])
          ;; fmt needs https://github.com/candid82/cljf:
          fmt (do (sh/shell "cljf src")
                  (sh/shell "cljf test")
@@ -11,6 +9,6 @@
          ;; Utilities / testing:
          words (println (dr/dreamwords-str))
          random (println (dr/random-dream-str))
-         test (dreams.test-runner/run-tests)
+         test (tr/run-tests)
          ;; Main event:
          epub (dr/epub)}}

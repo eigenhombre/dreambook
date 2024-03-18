@@ -7,12 +7,12 @@ https://github.com/typedclojure/typedclojure/blob/main/script-test/test_runner.c
             [clojure.test :as t])
   (:import [java.io File]))
 
-(def test-nses
+(def ^:private test-nses
   '{"test/dreams/dates_test.clj" dreams.dates-test
     "test/dreams/md_test.clj" dreams.md-test
     "test/dreams/html_test.clj" dreams.html-test})
 
-(defn check-missing! []
+(defn- check-missing! []
   (let [test-files
         (->> (File. "test")
              file-seq
