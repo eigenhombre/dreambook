@@ -2,25 +2,15 @@
  :tasks {:requires ([dreams.main :as dr]
                     [dreams.md-test]
                     [dreams.test-runner]
+                    [babashka.process :as sh]
                     [babashka.fs :as fs])
-         -book-file {:task "/Users/jacobsen/desktop/dreams.epub"}
-         -org-path {:task "/Users/jacobsen/org/dreams.org"}
-         -md-path {:task "/Users/jacobsen/org/dreams.md"}
-         ;; Utilities:
-         words (dr/dreamwords)
+         ;; fmt needs https://github.com/candid82/cljf:
+         fmt (do (sh/shell "cljf src")
+                 (sh/shell "cljf test")
+                 (sh/shell "cljf bb.edn"))
+         ;; Utilities / testing:
+         words (println (dr/dreamwords-str))
          random (println (dr/random-dream-str))
-         md {:depends [-org-path -md-path]
-             :task (dr/main)}
-         newpub {:depends [-org-path -md-path]
-                 :task (dr/newpub)}
-         nmd {:depends [-org-path -md-path]
-              :task (dr/newmd)
-              :watch [-org-path]}
-         book {:depends [md -md-path -book-file]
-               :task (when (seq (fs/modified-since
-                                 -book-file
-                                 -md-path))
-                       (dr/md->epub-OLD))}
-         install-book {:task (dr/install-book)
-                       :depends [book]}
-         test {:task (dreams.test-runner/run-tests)}}}
+         test (dreams.test-runner/run-tests)
+         ;; Main event:
+         epub (dr/epub)}}

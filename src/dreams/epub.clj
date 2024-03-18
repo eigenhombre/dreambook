@@ -144,6 +144,7 @@
 (defn- bpath [& els] (apply (partial fs/file basedir) els))
 (defn- cpath [& els] (apply (partial fs/file basedir cdir-name) els))
 (defn- cspit [f s] (spit (cpath f) s))
+
 (defn- zipfiles []
   (str/split (:out (sh/shell {:dir (bpath)
                               :out :string
@@ -179,12 +180,13 @@
     (println (format "EPUB '%s' generated successfully."
                      bookname))))
 
-(def ^:private chapters
-  [["Introduction"
-    "This is an intro.  There are many like it, but this one is mine."]
-   ["Chapter 1" "This is the first sentence of Chapter 1."]
-   ["Chapter 2" "This is the another sentence, in Chapter 2."]
-   ["Bonus Chapter" "This is a bonus chapter."]])
+(comment
+  (def ^:private example-chapters
+    [["Introduction"
+      "This is an intro.  There are many like it, but this one is mine."]
+     ["Chapter 1" "This is the first sentence of Chapter 1."]
+     ["Chapter 2" "This is the another sentence, in Chapter 2."]
+     ["Bonus Chapter" "This is a bonus chapter."]]))
 
 (defn- make-chapters [dreams]
   (let [dates (m/dream-dates dreams)
@@ -199,14 +201,12 @@
                              (d/format-date-for-section date)
                              txt)))]))))
 
-(defn mk-epub [dreams]
+(defn mk-epub [cover-image-path dreams]
   (let [dates (m/dream-dates dreams)
         year-months (d/year-months dates)
-        chapters (make-chapters dreams)
-        org-dir (str (System/getenv "HOME") "/org")
-        cover-image (str org-dir "/dreams-cover.png")]
+        chapters (make-chapters dreams)]
     (generate-epub "dreams.epub"
                    "eBook of Dreams"
                    "Eig N. Hombre"
-                   cover-image
+                   cover-image-path
                    chapters)))

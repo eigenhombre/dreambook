@@ -7,11 +7,11 @@
             [dreams.model :as m]
             [dreams.util :refer [wrap-n-columns nopunct normalize]]))
 
-(def org-dir (str (System/getenv "HOME") "/org"))
-(def dreams-path (str org-dir "/dreams.org"))
-(def md-path (str org-dir "/dreams.md"))
-(def cover-image (str org-dir "/dreams-cover.png"))
-(def epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
+(def ^:private org-dir (str (System/getenv "HOME") "/org"))
+(def ^:private dreams-path (str org-dir "/dreams.org"))
+(def ^:private md-path (str org-dir "/dreams.md"))
+(def ^:private cover-image-path (str org-dir "/dreams-cover.png"))
+(def ^:private epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
 
 (defn- toc-str [dreams]
   (let [ym (d/year-months (m/dream-dates dreams))]
@@ -74,7 +74,7 @@
                     m/parse-dreams)]
     (format-single-dream (rand-nth dreams))))
 
-(defn dreamwords []
+(defn dreamwords-str []
   (let [dreams (->> dreams-path
                     slurp
                     m/parse-dreams)
@@ -82,49 +82,19 @@
                     (map :txt)
                     (mapcat #(str/split % #"\s+|\-"))
                     (map normalize))]
-    (println (->> tokens
-                  frequencies
-                  (sort-by second)
-                  reverse
-                  (map first)
-                  (take 300)
-                  (str/join " ")
-                  (wrap-n-columns 10)))))
+    (->> tokens
+         frequencies
+         (sort-by second)
+         reverse
+         (map first)
+         (take 300)
+         (str/join " ")
+         (wrap-n-columns 10))))
 
-(defn md->epub-OLD []
-  (let [{:keys [exit out err]}
-        (sh/sh "ebook-convert"
-               md-path
-               epub-output
-               "--output-profile=tablet"
-               (str "--cover=" cover-image)
-               "--authors=Eig N. Hombre"
-               "--title=eBook of Dreams")]
-    (assert (zero? exit) (str "Error: " err))
-    (println out)))
-
-(defn install-book []
-  (println (sh/sh "open" "-a" "/Applications/calibre.app" epub-output))
-  (println (sh/sh "open" epub-output)))
-
-(defn newpub []
+(defn epub []
   (let [parsed-dreams (->> dreams-path
                            slurp
                            m/parse-dreams)]
     (spit-md parsed-dreams)
-    (epub/mk-epub parsed-dreams)
+    (epub/mk-epub cover-image-path parsed-dreams)
     (print-years parsed-dreams)))
-
-(defn main []
-  (let [parsed-dreams (->> dreams-path
-                           slurp
-                           m/parse-dreams)]
-    (spit-md parsed-dreams)
-    (epub/mk-epub parsed-dreams)
-    (print-years parsed-dreams)))
-
-(defn newmd []
-  (let [txt (slurp dreams-path)
-        md (org->md txt)
-        outfile (str (System/getenv "HOME") "/Desktop/dreams.md")]
-    (spit outfile md)))
