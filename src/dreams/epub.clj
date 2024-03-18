@@ -165,17 +165,17 @@
              (chapter chapname content)))
     (cspit "toc.ncx" (toc-ncx title uid chapters))
     (cspit "toc.xhtml" (toc-xhtml title chapters))
-    (prn (apply sh/shell
-                {:dir (bpath)
-                 :out :string
-                 :err :string}
-                "zip"
-                "-q"
-                "book.epub"
-                "mimetype"
-                (zipfiles)))
+    (println (:out (apply sh/shell
+                          {:dir (bpath)
+                           :out :string
+                           :err :string}
+                          "zip"
+                          "-q"
+                          bookname
+                          "mimetype"
+                          (zipfiles))))
     ;; (println (:out (clojure.java.shell/sh "ls" (str (bpath)))))
-    (fs/copy (bpath "book.epub") "." {:replace-existing true})
+    (fs/copy (bpath bookname) "." {:replace-existing true})
     (println (format "EPUB '%s' generated successfully."
                      bookname))))
 
@@ -195,7 +195,7 @@
         [(str month ", " year)
          (str/join "\n\n"
                    (for [{:keys [date id txt]} dreams]
-                     (format "<h2>%s</h2>\n%s"
+                     (format "<h3>%s</h3>\n%s"
                              (d/format-date-for-section date)
                              txt)))]))))
 
@@ -206,8 +206,7 @@
         org-dir (str (System/getenv "HOME") "/org")
         cover-image (str org-dir "/dreams-cover.png")]
     (generate-epub "dreams.epub"
-                   "Dreams"
+                   "eBook of Dreams"
                    "Eig N. Hombre"
                    cover-image
-                   chapters))
-  (println "mk-epub"))
+                   chapters)))

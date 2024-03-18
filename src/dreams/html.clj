@@ -3,7 +3,8 @@
 
 (defn escape-syms [s]
   (-> s
-      (str/replace #"&" "&amp;")))
+      (str/replace #"&" "&amp;")
+      (str/replace #"(?<!\S)\*([^\*]+)\*([\.”\"]*)?(?!\S)" "<em>$1</em>$2")))
 
 (defn md->html
   [s]

@@ -24,6 +24,7 @@
       "* a\n** b\n* c\n** d\n" "# a\n## b\n# c\n## d\n"
       "* a\n** b\n* c\n** d\n* e\n" "# a\n## b\n# c\n## d\n# e\n"
       "*** a\n" "### a\n"
+      " \"enhuges\" " " “enhuges” "
       "=code=" "`code`"
       " =code= " " `code` "
       ;; Stripping frontmatter:

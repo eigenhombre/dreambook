@@ -5,6 +5,7 @@
 (defn apply-regexes [s]
   (-> s
       (str/replace #"(?<!\S)\/([^\/]+)\/([\.”\"]*)?(?!\S)" "*$1*$2")
+      (str/replace #"(?<!\S)\"([^\"]+)\"(?!\S)" "“$1”")
       (str/replace #"--" "—")
       (str/replace #"<<" "«")
       (str/replace #">>" "»")

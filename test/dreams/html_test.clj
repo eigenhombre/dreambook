@@ -10,4 +10,5 @@
       "foo\nbar" "<p>foo\nbar</p>"
       "foo\n\nbar" "<p>foo</p>\n<p>bar</p>"
       "D&D" "<p>D&amp;D</p>"
+      " *over* " "<p> <em>over</em> </p>"
       "# header" "<h1>header</h1>")))
