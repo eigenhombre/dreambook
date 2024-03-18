@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [dreams.dates :as d]))
 
-(defn- apply-regexes [s]
+(defn apply-regexes [s]
   (-> s
       (str/replace #"(?<!\S)\/([^\/]+)\/([\.”\"]*)?(?!\S)" "*$1*$2")
       (str/replace #"--" "—")

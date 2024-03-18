@@ -5,8 +5,8 @@
             [clojure.string :as str]
             [dreams.dates :as d]
             [dreams.html :as html]
-            [dreams.model :as m]
-            [dreams.org :as org]))
+            [dreams.md :as md]
+            [dreams.model :as m]))
 
 (defn- strip-odd-c-or-d [s]
   (str/replace s #"xmlns:.=" "xmlns="))
@@ -75,13 +75,15 @@
                [:title ~title]]
               [:body
                [:h1 ~title]
-               [:p "CONTENT"]]]
+               [:div "CONTENT"]]]
         envelope (-> doc
                      xml/sexp-as-element
                      xml/indent-str
                      normalize-xml)]
-    (str/replace envelope "CONTENT" (html/md->html
-                                     content))))
+    (str/replace envelope
+                 "CONTENT"
+                 (html/md->html
+                  (md/apply-regexes content)))))
 
 (defn- container-xml [cdir]
   (normalize-xml

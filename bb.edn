@@ -9,8 +9,8 @@
          ;; Utilities:
          words (dr/dreamwords)
          random (println (dr/random-dream-str))
-         ;;  md {:depends [-org-path -md-path]
-         ;;      :task (dr/main)}
+         md {:depends [-org-path -md-path]
+             :task (dr/main)}
          newpub {:depends [-org-path -md-path]
                  :task (dr/newpub)}
          nmd {:depends [-org-path -md-path]
