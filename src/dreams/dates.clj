@@ -20,11 +20,10 @@
           (.getDayOfMonth d)))
 
 (defn format-date-for-section [d]
-  (format "%s, %s %d, %d"
+  (format "%s, %s %d"
           (str/capitalize (.getDayOfWeek d))
           (str/capitalize (.getMonth d))
-          (.getDayOfMonth d)
-          (.getYear d)))
+          (.getDayOfMonth d)))
 
 (defn- month-name [month]
   (.getDisplayName month TextStyle/FULL Locale/US))
