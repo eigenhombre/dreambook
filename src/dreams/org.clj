@@ -1,4 +1,5 @@
-(ns dreams.org)
+(ns dreams.org
+  (:require [clojure.string :as str]))
 
 (comment
   (def dr-test "
@@ -79,3 +80,11 @@ Zealanders.
              body))
          (remove #{""})
          (vec* :div))))
+
+(defn strip-frontmatter [s]
+  (str/replace s #"(?m)^(?:#\+.+?\n)\s*" ""))
+
+(defn raw-sections-before-date [s]
+  (->> s
+       (re-find #"(?ms)(.+?)\n\* \d+")
+       second))

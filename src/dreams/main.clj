@@ -5,6 +5,7 @@
             [dreams.epub :as epub]
             [dreams.md :refer [org->md]]
             [dreams.model :as m]
+            [dreams.org :as org]
             [dreams.util :refer [wrap-n-columns nopunct normalize]]))
 
 (def ^:private org-dir (str (System/getenv "HOME") "/org"))
@@ -44,11 +45,7 @@
                                (org->md txt))))))))))))
 
 (defn- dreams-as-md [dreams]
-  (let [toc (toc-str dreams)]
-    (str toc "\n\n" (format-dreams-md dreams))))
-
-(defn- spit-md [parsed-dreams]
-  (spit md-path (dreams-as-md parsed-dreams)))
+  (format-dreams-md dreams))
 
 (defn- print-years [parsed-dreams]
   (let [year-counts (->> parsed-dreams
@@ -91,10 +88,15 @@
          (str/join " ")
          (wrap-n-columns 10))))
 
+(defn find-frontmatter [s]
+  (->> s
+       org/strip-frontmatter
+       org/raw-sections-before-date))
+
 (defn epub []
-  (let [parsed-dreams (->> dreams-path
-                           slurp
-                           m/parse-dreams)]
-    (spit-md parsed-dreams)
-    (epub/mk-epub cover-image-path parsed-dreams)
+  (let [raw-dreams (slurp dreams-path)
+        parsed-dreams (->> raw-dreams
+                           m/parse-dreams)
+        starting-md (org->md (find-frontmatter raw-dreams))]
+    (epub/mk-epub cover-image-path starting-md parsed-dreams)
     (print-years parsed-dreams)))
