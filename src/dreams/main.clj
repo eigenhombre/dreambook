@@ -10,6 +10,8 @@
 
 (def ^:private org-dir (str (System/getenv "HOME") "/org"))
 (def ^:private dreams-path (str org-dir "/dreams.org"))
+(def ^:private dreams-intro-path (str org-dir "/dreams-intro.org"))
+(def ^:private dreams-collophon-path (str org-dir "/dreams-collophon.org"))
 (def ^:private md-path (str org-dir "/dreams.md"))
 (def ^:private cover-image-path (str org-dir "/dreams-cover.png"))
 (def ^:private epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
@@ -97,6 +99,13 @@
   (let [raw-dreams (slurp dreams-path)
         parsed-dreams (->> raw-dreams
                            m/parse-dreams)
-        starting-md (org->md (find-frontmatter raw-dreams))]
-    (epub/mk-epub cover-image-path starting-md parsed-dreams)
+        starting-md (->> dreams-intro-path
+                         slurp
+                         org/strip-frontmatter
+                         org->md)
+        ending-md (->> dreams-collophon-path
+                       slurp
+                       org/strip-frontmatter
+                       org->md)]
+    (epub/mk-epub cover-image-path starting-md parsed-dreams ending-md)
     (print-years parsed-dreams)))
