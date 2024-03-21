@@ -33,4 +33,4 @@
 
 # Introduction" "# Introduction"
       ;; Parsing dates:
-      "* <1987-01-12 Mon>\n" "# Monday, January 12, 1987\n")))
+      "* <1987-01-12 Mon>\n" "# Monday, January 12\n")))

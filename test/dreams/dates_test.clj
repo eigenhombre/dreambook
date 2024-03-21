@@ -7,4 +7,4 @@
     (are [input expected]
       (is (= expected (d/format-date-for-section
                        (d/parse-date input))))
-      "<1998-11-01 Sun>" "Sunday, November 1, 1998")))
+      "<1998-11-01 Sun>" "Sunday, November 1")))
