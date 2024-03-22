@@ -1,4 +1,4 @@
-(ns dreams.org
+(ns dreambook.org
   (:require [clojure.string :as str]))
 
 (comment

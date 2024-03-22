@@ -1,12 +1,12 @@
-(ns dreams.main
+(ns dreambook.main
   (:require [clojure.java.shell :as sh]
             [clojure.string :as str]
-            [dreams.dates :as d]
-            [dreams.epub :as epub]
-            [dreams.md :refer [org->md]]
-            [dreams.model :as m]
-            [dreams.org :as org]
-            [dreams.util :refer [wrap-n-columns nopunct normalize]]))
+            [dreambook.dates :as d]
+            [dreambook.epub :as epub]
+            [dreambook.md :refer [org->md]]
+            [dreambook.model :as m]
+            [dreambook.org :as org]
+            [dreambook.util :refer [wrap-n-columns nopunct normalize]]))
 
 (def ^:private org-dir (str (System/getenv "HOME") "/org"))
 (def ^:private dreams-path (str org-dir "/dreams.org"))

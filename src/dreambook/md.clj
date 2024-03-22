@@ -1,6 +1,6 @@
-(ns dreams.md
+(ns dreambook.md
   (:require [clojure.string :as str]
-            [dreams.dates :as d]))
+            [dreambook.dates :as d]))
 
 (defn apply-regexes
   "

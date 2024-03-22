@@ -1,6 +1,6 @@
-(ns dreams.md-test
+(ns dreambook.md-test
   (:require [clojure.test :refer :all]
-            [dreams.md :as md]))
+            [dreambook.md :as md]))
 
 (deftest test-md
   (testing "org->md"

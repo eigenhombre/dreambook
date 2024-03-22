@@ -1,6 +1,6 @@
 {:paths ["src" "test"]
- :tasks {:requires ([dreams.main :as dr]
-                    [dreams.test-runner :as tr]
+ :tasks {:requires ([dreambook.main :as dr]
+                    [dreambook.test-runner :as tr]
                     [babashka.process :as sh])
          ;; fmt needs https://github.com/candid82/cljf:
          fmt (do (sh/shell "cljf src")

@@ -1,6 +1,6 @@
-(ns dreams.dates-test
+(ns dreambook.dates-test
   (:require [clojure.test :refer :all]
-            [dreams.dates :as d]))
+            [dreambook.dates :as d]))
 
 (deftest test-date-parse
   (testing "parse and unparse"

@@ -1,4 +1,4 @@
-(ns dreams.html
+(ns dreambook.html
   (:require [clojure.string :as str]))
 
 (defn escape-syms [s]

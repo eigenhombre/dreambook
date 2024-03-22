@@ -1,4 +1,4 @@
-(ns dreams.util
+(ns dreambook.util
   (:require [clojure.string :as str]))
 
 (defn- wrap-n-columns [n s]

@@ -1,7 +1,7 @@
-(ns dreams.dates
+(ns dreambook.dates
   (:require [clojure.java.shell :as sh]
             [clojure.string :as str]
-            [dreams.org :as org])
+            [dreambook.org :as org])
   (:import [java.time LocalDate]
            [java.time.format DateTimeFormatter TextStyle]
            [java.util Locale]))

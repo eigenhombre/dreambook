@@ -1,13 +1,13 @@
-(ns dreams.epub
+(ns dreambook.epub
   (:require [babashka.fs :as fs]
             [babashka.process :as sh]
             [clojure.data.xml :as xml]
             [clojure.string :as str]
-            [dreams.dates :as d]
-            [dreams.html :as html]
-            [dreams.md :as md]
-            [dreams.model :as m]
-            [dreams.org :as org]))
+            [dreambook.dates :as d]
+            [dreambook.html :as html]
+            [dreambook.md :as md]
+            [dreambook.model :as m]
+            [dreambook.org :as org]))
 
 (defn- strip-odd-c-or-d [s]
   (str/replace s #"xmlns:.=" "xmlns="))

@@ -1,6 +1,6 @@
-(ns dreams.html-test
+(ns dreambook.html-test
   (:require [clojure.test :refer [testing deftest are is]]
-            [dreams.html :as html]))
+            [dreambook.html :as html]))
 
 (deftest html
   (testing "basic MD->HTML transformation"

@@ -1,6 +1,6 @@
-(ns dreams.model
-  (:require [dreams.dates :as d]
-            [dreams.org :as org]))
+(ns dreambook.model
+  (:require [dreambook.dates :as d]
+            [dreambook.org :as org]))
 
 (defn parse-dreams [s]
   (let [section-bunches

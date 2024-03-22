@@ -2,15 +2,15 @@
 Adapted from
 https://github.com/typedclojure/typedclojure/blob/main/script-test/test_runner.clj
 "}
-  dreams.test-runner
+  dreambook.test-runner
   (:require [clojure.set :as set]
             [clojure.test :as t])
   (:import [java.io File]))
 
 (def ^:private test-nses
-  '{"test/dreams/dates_test.clj" dreams.dates-test
-    "test/dreams/md_test.clj" dreams.md-test
-    "test/dreams/html_test.clj" dreams.html-test})
+  '{"test/dreambook/dates_test.clj" dreambook.dates-test
+    "test/dreambook/md_test.clj" dreambook.md-test
+    "test/dreambook/html_test.clj" dreambook.html-test})
 
 (defn- check-missing! []
   (let [test-files
@@ -20,7 +20,7 @@ https://github.com/typedclojure/typedclojure/blob/main/script-test/test_runner.c
              (map #(.getPath %))
              (filter #(clojure.string/ends-with? % ".clj"))
              set)
-        exclusions #{"test/dreams/test_runner.clj"}
+        exclusions #{"test/dreambook/test_runner.clj"}
         missing (set/difference
                  test-files
                  (into exclusions (keys test-nses)))]
