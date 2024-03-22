@@ -12,6 +12,7 @@
       "Bill's" "<p>Bill&#8217;s</p>"
       "players' " "<p>players&#8217; </p>"
       "I'm" "<p>I&#8217;m</p>"
+      "C<u>F</u>F" "<p>C<u>F</u>F</p>"
       "D&D" "<p>D&amp;D</p>"
       " \"enhuges\" " "<p> &#8220;enhuges&#8221; </p>"
       " *over* " "<p> <em>over</em> </p>"
