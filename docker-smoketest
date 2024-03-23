@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+docker build -t dreambook .
+
+docker run -it dreambook ./dreambook \
+      -d example/dreams.org \
+      -i example/intro.org \
+      -c example/collophon.org \
+      -j example/cover.png

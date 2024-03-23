@@ -11,21 +11,17 @@
   (dr/epub coverfile dreamsfile introfile collophonfile))
 
 (def ^:private cli-spec
-  {:spec {:dreamsfile {:validate fs/exists?
-                       :alias :d
+  {:spec {:dreamsfile {:alias :d
                        :default (str (default-org-dir) "/dreams.org")
                        :doc "Path to the dreams.org file"}
-          :introfile {:validate fs/exists?
-                      :alias :i
-                      :default (str (default-org-dir) "/dreams-intro.org")
+          :introfile {:alias :i
+                      :default (str (default-org-dir) "/intro.org")
                       :doc "Path to the dreams-intro.org file"}
-          :collophonfile {:validate fs/exists?
-                          :alias :c
-                          :default (str (default-org-dir) "/dreams-collophon.org")
+          :collophonfile {:alias :c
+                          :default (str (default-org-dir) "/collophon.org")
                           :doc "Path to the dreams-collophon.org file"}
-          :coverfile {:validate fs/exists?
-                      :alias :j
-                      :default (str (default-org-dir) "/dreams-cover.png")
+          :coverfile {:alias :j
+                      :default (str (default-org-dir) "/cover.png")
                       :doc "Path to the dreams-cover.png file"}
           :help {:flag true
                  :alias :h
