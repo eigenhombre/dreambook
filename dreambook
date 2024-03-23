@@ -7,9 +7,6 @@
 (defn- default-org-dir []
   (str (System/getenv "HOME") "/org"))
 
-(defn- mk-epub [{:keys [dreamsfile introfile collophonfile coverfile] :as foo}]
-  (dr/epub coverfile dreamsfile introfile collophonfile))
-
 (def ^:private cli-spec
   {:spec {:dreamsfile {:alias :d
                        :default (str (default-org-dir) "/dreams.org")
@@ -23,6 +20,12 @@
           :coverfile {:alias :j
                       :default (str (default-org-dir) "/dreams-cover.png")
                       :doc "Path to the dreams-cover.png file"}
+          :author {:alias :a
+                   :default (System/getProperty "user.name")
+                   :doc "Author of the book"}
+          :title {:alias :t
+                  :default "eBook of Dreams"
+                  :doc "Title of the book"}
           :help {:flag true
                  :alias :h
                  :doc "Show this help"}}})
@@ -35,6 +38,6 @@
   (let [parsed-opts (cli/parse-opts *command-line-args* cli-spec)]
     (if (or (:help parsed-opts) (:h parsed-opts))
       (println (show-help cli-spec))
-      (mk-epub parsed-opts))))
+      (dr/epub parsed-opts))))
 
 (-main)

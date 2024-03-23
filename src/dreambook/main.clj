@@ -105,17 +105,20 @@ these give day most us"
        org/strip-frontmatter
        org/raw-sections-before-date))
 
-(defn epub [cover-image-path dreams-path dreams-intro-path dreams-collophon-path]
-  (let [raw-dreams (slurp dreams-path)
+(defn epub [{:keys [coverfile dreamsfile introfile collophonfile] :as opts}]
+  (let [raw-dreams (slurp dreamsfile)
         parsed-dreams (->> raw-dreams
                            m/parse-dreams)
-        starting-md (->> dreams-intro-path
+        starting-md (->> introfile
                          slurp
                          org/strip-frontmatter
                          org->md)
-        ending-md (->> dreams-collophon-path
+        ending-md (->> collophonfile
                        slurp
                        org/strip-frontmatter
                        org->md)]
-    (epub/mk-epub cover-image-path starting-md parsed-dreams ending-md)
+    (epub/mk-epub (-> opts
+                      (assoc :parsed-dreams parsed-dreams)
+                      (assoc :starting-md starting-md)
+                      (assoc :ending-md ending-md)))
     (print-years parsed-dreams)))

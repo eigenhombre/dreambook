@@ -2,7 +2,7 @@
 
 ![build](https://github.com/eigenhombre/dreambook/actions/workflows/build.yml/badge.svg)
 
-`dreambook` converts a dream journal into an ebook.
+`dreambook` converts a dream journal into an ebook (EPUB format).
 
 ## Requirements
 
@@ -48,6 +48,18 @@ These file locations are configurable:
                 -j /path/to/dreams-cover.png
 
 See also `docker-smoketest` for a working example used in the CI build.
+
+### Options
+
+```
+  -d, --dreamsfile    $HOME/org/dreams.org
+  -i, --introfile     $HOME/org/dreams-intro.org
+  -c, --collophonfile $HOME/org/dreams-collophon.org
+  -j, --coverfile     $HOME/org/dreams-cover.png
+  -a, --author        $USER
+  -t, --title         eBook of Dreams
+  -h, --help
+```
 
 ## Example Output
 

@@ -208,12 +208,16 @@
                                      txt)))]))
             (md-as-chapters collophon))))
 
-(defn mk-epub [cover-image-path frontmatter dreams collophon]
-  (let [dates (m/dream-dates dreams)
+(defn mk-epub [{:keys [parsed-dreams
+                       starting-md
+                       coverfile
+                       ending-md
+                       author]}]
+  (let [dates (m/dream-dates parsed-dreams)
         year-months (d/year-months dates)
-        chapters (make-chapters frontmatter dreams collophon)]
+        chapters (make-chapters starting-md parsed-dreams ending-md)]
     (generate-epub "dreams.epub"
                    "eBook of Dreams"
-                   "Eig N. Hombre"
-                   cover-image-path
+                   author
+                   coverfile
                    chapters)))
