@@ -4,7 +4,7 @@ set -e
 
 docker build -t dreambook .
 
-docker run -it dreambook ./dreambook \
+docker run -t dreambook ./dreambook \
       -d example/dreams.org \
       -i example/intro.org \
       -c example/collophon.org \
