@@ -15,13 +15,13 @@
                        :default (str (default-org-dir) "/dreams.org")
                        :doc "Path to the dreams.org file"}
           :introfile {:alias :i
-                      :default (str (default-org-dir) "/intro.org")
+                      :default (str (default-org-dir) "/dreams-intro.org")
                       :doc "Path to the dreams-intro.org file"}
           :collophonfile {:alias :c
-                          :default (str (default-org-dir) "/collophon.org")
+                          :default (str (default-org-dir) "/dreams-collophon.org")
                           :doc "Path to the dreams-collophon.org file"}
           :coverfile {:alias :j
-                      :default (str (default-org-dir) "/cover.png")
+                      :default (str (default-org-dir) "/dreams-cover.png")
                       :doc "Path to the dreams-cover.png file"}
           :help {:flag true
                  :alias :h
