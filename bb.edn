@@ -7,7 +7,5 @@
                  (sh/shell "cljf src")
                  (sh/shell "cljf test")
                  (sh/shell "cljf bb.edn"))
-         ;; Utilities / testing:
-         test (tr/run-tests)
-         ;; Move to -main:
-         random (println (dr/random-dream-str))}}
+         ;; testing:
+         test (tr/run-tests)}}

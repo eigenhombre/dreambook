@@ -8,9 +8,6 @@
             [dreambook.org :as org]
             [dreambook.util :refer [wrap-n-columns nopunct normalize]]))
 
-;; FIXME REMOVE
-(def ^:private org-dir (str (System/getenv "HOME") "/org"))
-(def ^:private dreams-path (str org-dir "/dreams.org"))
 
 (defn- toc-str [dreams]
   (let [ym (d/year-months (m/dream-dates dreams))]
@@ -63,7 +60,8 @@
    [(format "# %s\n\n" (d/format-date-for-section (:date dream)))
     (org->md (:txt dream))]))
 
-(defn random-dream-str []
+;; Unused for the moment:
+(defn random-dream-str [dreams-path]
   (let [dreams (->> dreams-path
                     slurp
                     m/parse-dreams)]
