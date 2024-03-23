@@ -1,17 +1,44 @@
 #!/usr/bin/env bb
 (ns dreambook
   (:require [babashka.cli :as cli]
+            [babashka.fs :as fs]
             [dreambook.main :as dr]))
 
 (defn- default-org-dir []
   (str (System/getenv "HOME") "/org"))
 
-(defn -main [& args]
-  (let [org-path (default-org-dir)
-        dreams-path (str org-path "/dreams.org")
-        dreams-intro-path (str org-path "/dreams-intro.org")
-        dreams-collophon-path (str org-path "/dreams-collophon.org")
-        cover-image-path (str org-path "/dreams-cover.png")]
-    (dr/epub cover-image-path dreams-path dreams-intro-path dreams-collophon-path)))
+(defn- mk-epub [{:keys [dreamsfile introfile collophonfile coverfile] :as foo}]
+  (dr/epub coverfile dreamsfile introfile collophonfile))
+
+(def ^:private cli-spec
+  {:spec {:dreamsfile {:validate fs/exists?
+                       :alias :d
+                       :default (str (default-org-dir) "/dreams.org")
+                       :doc "Path to the dreams.org file"}
+          :introfile {:validate fs/exists?
+                      :alias :i
+                      :default (str (default-org-dir) "/dreams-intro.org")
+                      :doc "Path to the dreams-intro.org file"}
+          :collophonfile {:validate fs/exists?
+                          :alias :c
+                          :default (str (default-org-dir) "/dreams-collophon.org")
+                          :doc "Path to the dreams-collophon.org file"}
+          :coverfile {:validate fs/exists?
+                      :alias :j
+                      :default (str (default-org-dir) "/dreams-cover.png")
+                      :doc "Path to the dreams-cover.png file"}
+          :help {:flag true
+                 :alias :h
+                 :doc "Show this help"}}})
+
+(defn show-help
+  [spec]
+  (cli/format-opts (merge spec {:order (vec (keys (:spec spec)))})))
+
+(defn -main []
+  (let [parsed-opts (cli/parse-opts *command-line-args* cli-spec)]
+    (if (or (:help parsed-opts) (:h parsed-opts))
+      (println (show-help cli-spec))
+      (mk-epub parsed-opts))))
 
 (-main)

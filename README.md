@@ -4,8 +4,8 @@
 
 ## Requirements
 
-- [Babashka](https://github.com/babashka/babashka)
-- A dream journal, written in Org Mode format, similar in format to
+- [Babashka](https://github.com/babashka/babashka), a fast-starting Clojure interpreter for scripts.
+- A dream journal, written in [Org Mode format](https://orgmode.org/), similar in format to
   the one in `examples/dreams.org`.
 
 Tested on Mac.  Probably works on Linux.
@@ -13,12 +13,23 @@ Tested on Mac.  Probably works on Linux.
 Resulting EPUB book tested in Calibre, on Apple Books (Mac, iPad,
 iPhone), and occasionally on a Kindle and a Kobo device.
 
-## Installation
+## Format
 
-- Clone this repository
-- `cd` into the repository
+See `examples/dreams.org` for an example of the format.  Dreams must be
+entered in subsections using Org's date format; the subsections for each
+year should fall under a top-level heading for that year.  For example:
+
+```
+* 2011
+
+** <2011-04-26 Tue>
+
+After a long day of work, am walking to the train.  Without warning, [....]
+```
 
 ## Usage
+
+There is no installation per se; just clone the repository and run the script.
 
     ./dreambook
 
@@ -29,7 +40,10 @@ file `$HOME/org/dreams-intro.org` can be used to set up frontmatter to the book
 and `$HOME/org/dreams-collophon.org` can be used to set up any concluding content.
 These file locations are configurable:
 
-    ./dreambook -i /path/to/dreams.org -I /path/to/dreams-intro.org -C /path/to/dreams-collophon.org
+    ./dreambook -d /path/to/dreams.org \
+                -i /path/to/dreams-intro.org \
+                -c /path/to/dreams-collophon.org \
+                -j /path/to/dreams-cover.png
 
 ## Example Output
 
@@ -37,6 +51,8 @@ In addition to creating the EPUB file, `dreambook` prints a report of number of 
 per year, as well as the total number of dreams:
 
 ```
+$ ./dreambook
+
 EPUB 'dreams.epub' generated successfully.
 1985:   68 ....................................................................
 1986:   59 ...........................................................
@@ -60,6 +76,7 @@ EPUB 'dreams.epub' generated successfully.
 2023:   14 ..............
 2024:   35 ...................................
 TOTAL: 385
+$
 ```
 
 ## Other Actions
