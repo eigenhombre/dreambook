@@ -8,13 +8,9 @@
             [dreambook.org :as org]
             [dreambook.util :refer [wrap-n-columns nopunct normalize]]))
 
+;; FIXME REMOVE
 (def ^:private org-dir (str (System/getenv "HOME") "/org"))
 (def ^:private dreams-path (str org-dir "/dreams.org"))
-(def ^:private dreams-intro-path (str org-dir "/dreams-intro.org"))
-(def ^:private dreams-collophon-path (str org-dir "/dreams-collophon.org"))
-(def ^:private md-path (str org-dir "/dreams.md"))
-(def ^:private cover-image-path (str org-dir "/dreams-cover.png"))
-(def ^:private epub-output (str (System/getenv "HOME") "/Desktop/dreams.epub"))
 
 (defn- toc-str [dreams]
   (let [ym (d/year-months (m/dream-dates dreams))]
@@ -109,7 +105,7 @@ these give day most us"
        org/strip-frontmatter
        org/raw-sections-before-date))
 
-(defn epub []
+(defn epub [cover-image-path dreams-path dreams-intro-path dreams-collophon-path]
   (let [raw-dreams (slurp dreams-path)
         parsed-dreams (->> raw-dreams
                            m/parse-dreams)

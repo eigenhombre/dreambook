@@ -1,0 +1,17 @@
+#!/usr/bin/env bb
+(ns dreambook
+  (:require [babashka.cli :as cli]
+            [dreambook.main :as dr]))
+
+(defn- default-org-dir []
+  (str (System/getenv "HOME") "/org"))
+
+(defn -main [& args]
+  (let [org-path (default-org-dir)
+        dreams-path (str org-path "/dreams.org")
+        dreams-intro-path (str org-path "/dreams-intro.org")
+        dreams-collophon-path (str org-path "/dreams-collophon.org")
+        cover-image-path (str org-path "/dreams-cover.png")]
+    (dr/epub cover-image-path dreams-path dreams-intro-path dreams-collophon-path)))
+
+(-main)

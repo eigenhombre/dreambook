@@ -3,12 +3,14 @@
                     [dreambook.test-runner :as tr]
                     [babashka.process :as sh])
          ;; fmt needs https://github.com/candid82/cljf:
-         fmt (do (sh/shell "cljf src")
+         fmt (do (sh/shell "cljf dreambook")
+                 (sh/shell "cljf src")
                  (sh/shell "cljf test")
                  (sh/shell "cljf bb.edn"))
          ;; Utilities / testing:
+         test (tr/run-tests)
+         ;; Move to -main:
          words (println (dr/dreamwords-str))
          random (println (dr/random-dream-str))
-         test (tr/run-tests)
-         ;; Main event:
-         epub (dr/epub)}}
+         ;;         epub (dr/epub)
+         }}
