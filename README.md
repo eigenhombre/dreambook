@@ -1,15 +1,24 @@
 # dreambook
 
-`dreambook` is the program I wrote to convert my dream journal into an ebook.
+`dreambook` converts a dream journal into an ebook.
 
 ## Requirements
 
 - [Babashka](https://github.com/babashka/babashka)
+- A dream journal, written in Org Mode format, similar in format to
+  the one in `examples/dreams.org`.
+
 
 ## Installation
 
+- Clone this repository
+- `cd` into the repository
 
 ## Usage
+
+# TODO
+
+- Support bare markdown files.
 
 # LICENSE
 
