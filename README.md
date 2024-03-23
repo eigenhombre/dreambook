@@ -113,7 +113,9 @@ $
 
 ## Word Frequencies
 
-It can be interesting to see what words are most common in your dreams.  To view the top words (excluding common English words), run:
+It can be interesting to see what words are most common in your
+dreams.  To view the top words (excluding the most common English
+words), run:
 
     ./dreambook -w   # (or --words)
 
