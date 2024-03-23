@@ -8,7 +8,7 @@
 
 - [Babashka](https://github.com/babashka/babashka), a fast-starting Clojure interpreter for scripts.
 - A dream journal, written in [Org Mode format](https://orgmode.org/), similar in format to
-  the one in `examples/dreams.org`.
+  the one in `example/dreams.org`.
 
 Tested on Mac.  Probably works on Linux.
 
@@ -17,7 +17,7 @@ iPhone), and occasionally on a Kindle and a Kobo device.
 
 ## Format
 
-See `examples/dreams.org` for an example of the format.  Dreams must be
+See `example/dreams.org` for an example of the format.  Dreams must be
 entered in subsections using Org's date format; the subsections for each
 year should fall under a top-level heading for that year.  For example:
 
