@@ -4,6 +4,26 @@
 
 `dreambook` converts a dream journal into an ebook (EPUB format).
 
+## Motivation
+
+I did a big collation of my various dream journals in 2024 and wanted
+to make an ebook out of them to read at leisure and possibly use as a
+source for art imagery.  I used the
+[Calibre](https://calibre-ebook.com/) ebook converter for awhile, but
+it was relatively slow and I had trouble with the resulting table of
+contents; Pandoc is the most commonly cited alternative for coverting
+between formats, but this did not install cleanly on my Mac using
+Homebrew.
+
+I also thought that "rolling my own" would be a good oportunity to
+learn how the EPUB format worked.  This did involve reverse
+engineering some example EPUBs, the result of which was [this
+relatively minimal epub
+template](https://github.com/eigenhombre/minpub).
+
+The resulting product is relatively fast, running in about a quarter
+of a second for my roughly 400-entry dream journal.
+
 ## Requirements
 
 - [Babashka](https://github.com/babashka/babashka), a fast-starting Clojure interpreter for scripts.
