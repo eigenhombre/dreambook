@@ -1,5 +1,7 @@
 # dreambook
 
+![build](https://github.com/eigenhombre/dreambook/actions/workflows/build.yml/badge.svg)
+
 `dreambook` converts a dream journal into an ebook.
 
 ## Requirements
