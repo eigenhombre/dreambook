@@ -32,8 +32,9 @@ of a second for my roughly 400-entry dream journal.
 
 Tested on Mac.  Probably works on Linux.
 
-Resulting EPUB book tested in Calibre, on Apple Books (Mac, iPad,
-iPhone), and occasionally on a Kindle and a Kobo device.
+The resulting EPUB output for my journal has been tested in Calibre,
+on Apple Books (Mac, iPad, iPhone), and occasionally on a Kindle and a
+Kobo device.
 
 ## Format
 
