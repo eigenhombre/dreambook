@@ -26,7 +26,7 @@ year should fall under a top-level heading for that year.  For example:
 
 ** <2011-04-26 Tue>
 
-After a long day of work, am walking to the train.  Without warning, [....]
+After a long day of work, I am walking to the train.  Without warning, [....]
 ```
 
 ## Usage
@@ -80,6 +80,21 @@ EPUB 'dreams.epub' generated successfully.
 2023:   14 ..............
 2024:   35 ...................................
 TOTAL: 385
+$
+```
+
+Or, on the supplied example,
+
+```
+$ ./dreambook -d example/dreams.org \
+              -i example/intro.org \
+              -c example/collophon.org \
+              -j example/cover.png
+
+EPUB 'dreams.epub' generated successfully.
+1987:    1 .
+2003:    1 .
+TOTAL: 2
 $
 ```
 
