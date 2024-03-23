@@ -45,6 +45,8 @@ These file locations are configurable:
                 -c /path/to/dreams-collophon.org \
                 -j /path/to/dreams-cover.png
 
+See also `docker-smoketest` for a working example used in the CI build.
+
 ## Example Output
 
 In addition to creating the EPUB file, `dreambook` prints a report of number of dreams
