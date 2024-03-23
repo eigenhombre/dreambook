@@ -16,9 +16,7 @@
 
 ## Usage
 
-# TODO
-
-- Support bare markdown files.
+TODO
 
 # LICENSE
 
