@@ -10,3 +10,4 @@ docker run -t dreambook ./dreambook \
       -i example/intro.org \
       -c example/collophon.org \
       -j example/cover.png
+docker run -t dreambook ./dreambook --words -d example/dreams.org

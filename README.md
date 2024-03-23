@@ -58,6 +58,7 @@ See also `docker-smoketest` for a working example used in the CI build.
   -j, --coverfile     $HOME/org/dreams-cover.png
   -a, --author        $USER
   -t, --title         eBook of Dreams
+  -w, --words
   -h, --help
 ```
 
@@ -107,6 +108,21 @@ EPUB 'dreams.epub' generated successfully.
 1987:    1 .
 2003:    1 .
 TOTAL: 2
+$
+```
+
+## Word Frequencies
+
+It can be interesting to see what words are most common in your dreams.  To view the top words (excluding common English words), run:
+
+    ./dreambook -w   # (or --words)
+
+Example:
+
+```
+$ ./dreambook --words -d example/dreams.org
+are basement bus crawl eating feel fifteen find fit
+friends house i'm it's kfc manhole many place quiet sitting
 $
 ```
 

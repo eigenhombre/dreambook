@@ -81,8 +81,8 @@ these give day most us"
       (str/split #"\s+")
       set))
 
-(defn dreamwords-str []
-  (let [dreams (->> dreams-path
+(defn dreamwords-str [dreamsfile]
+  (let [dreams (->> dreamsfile
                     slurp
                     m/parse-dreams)
         tokens (->> dreams
@@ -96,9 +96,13 @@ these give day most us"
          (map first)
          (remove english-words-top-100)
          (take 300)
+         (remove empty?)
          sort
          (str/join " ")
          (wrap-n-columns 10))))
+
+(defn words [{:keys [dreamsfile]}]
+  (println (dreamwords-str dreamsfile)))
 
 (defn find-frontmatter [s]
   (->> s

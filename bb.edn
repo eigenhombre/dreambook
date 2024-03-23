@@ -10,7 +10,4 @@
          ;; Utilities / testing:
          test (tr/run-tests)
          ;; Move to -main:
-         words (println (dr/dreamwords-str))
-         random (println (dr/random-dream-str))
-         ;;         epub (dr/epub)
-         }}
+         random (println (dr/random-dream-str))}}
