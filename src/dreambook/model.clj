@@ -17,7 +17,6 @@
           :let [d (d/parse-date day-str)]]
       {:year (Integer. a)
        :date d
-       :id (d/format-date-as-id d)
        :txt txt})))
 
 (defn dream-dates [dreams]
