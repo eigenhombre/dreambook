@@ -5,8 +5,7 @@
             [dreambook.epub :as epub]
             [dreambook.md :refer [org->md]]
             [dreambook.model :as m]
-            [dreambook.org :as org]
-            [dreambook.util :refer [wrap-n-columns nopunct normalize]]))
+            [dreambook.org :as org]))
 
 
 (defn- toc-str [dreams]
@@ -78,6 +77,20 @@ after use two how our work first well way even new want because any
 these give day most us"
       (str/split #"\s+")
       set))
+
+(defn- wrap-n-columns [n s]
+  (str/join
+   "\n"
+   (map #(str/join " " %)
+        (partition n (str/split s #"\s+")))))
+
+(defn- nopunct [s]
+  (str/replace s #"[,-\.\?\\\[\]\(\)\-–\"“”$’]*" ""))
+
+(defn- normalize [w]
+  (->> w
+       str/lower-case
+       nopunct))
 
 (defn dreamwords-str [dreamsfile]
   (let [dreams (->> dreamsfile
