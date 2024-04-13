@@ -7,7 +7,6 @@
             [dreambook.model :as m]
             [dreambook.org :as org]))
 
-
 (defn- toc-str [dreams]
   (let [ym (d/year-months (m/dream-dates dreams))]
     (str

@@ -10,7 +10,6 @@
   "
   [s]
   (-> s
-      (str/replace #"(?<!\S)\/([^\/]+)\/([\.”\"]*)?(?!\S)" "*$1*$2")
       (str/replace #"--" "—")
       (str/replace #"<<" "«")
       (str/replace #">>" "»")
@@ -18,7 +17,13 @@
       (str/replace #"(?m)^\* ([^*]+?\n)" "# $1")
       (str/replace #"(?m)^\*\* ([^*]+?\n)" "## $1")
       (str/replace #"(?m)^\*\*\* ([^*]+?\n)" "### $1")
-      (str/replace #"(?m)^(?:#\+.+?\n)\s*" "")))
+      (str/replace #"(?m)^(?:#\+.+?\n)\s*" "")
+      ;; Strikethrough:
+      (str/replace #"\+([^\+]+?)\+" "~~$1~~")
+      ;; Boldface:
+      (str/replace #"(?<!\S)\*([^\*]+)\*([\.”\"]*)?(?!\S)" "**$1**$2")
+      ;; Italics:
+      (str/replace #"(?<!\S)\/([^\/]+)\/([\.”\"]*)?(?!\S)" "*$1*$2")))
 
 (defn- convert-dates
   "

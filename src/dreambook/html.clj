@@ -9,7 +9,13 @@
       (str/replace "I'm" "I&#8217;m")
       (str/replace #"(?=\S)s'(?!\S)" "s&#8217;")
       (str/replace #"(?=\S)'s" "&#8217;s")
-      (str/replace #"(?<!\S)\*([^\*]+)\*([\.”\"]*)?(?!\S)" "<em>$1</em>$2")))
+      ;; Italics:
+      (str/replace #"(?<!\S)\*([^\*]+)\*([\.”\"]*)?(?!\S)" "<em>$1</em>$2")
+      ;; Boldface:
+      (str/replace #"(?<!\S)\*\*([^\*]+)\*\*([\.”\"]*)?(?!\S)" "<strong>$1</strong>$2")
+      ;; Strikethrough:
+      (str/replace #"\~\~([^\~]+)\~\~" "<s>$1</s>")
+      (str/replace #"`([^`]+)`" "<code>$1</code>")))
 
 (defn md->html
   [s]

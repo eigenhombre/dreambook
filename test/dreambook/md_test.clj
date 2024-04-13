@@ -13,6 +13,7 @@
       " /hello there/ " " *hello there* "
       " /City/. " " *City*. "
       " /dead/.\" " " *dead*.\" "
+      " *wild*.\" " " **wild**.\" "
       "a/b" "a/b"
       " a/b/c " " a/b/c "
       "* a\n" "# a\n"
@@ -26,6 +27,8 @@
       "*** a\n" "### a\n"
       "=code=" "`code`"
       " =code= " " `code` "
+      ;; Strikethrough:
+      "+foo+" "~~foo~~"
       ;; Stripping frontmatter:
       "#+TITLE: Dreams
 #+DATE: <2017-08-29 Tue>
