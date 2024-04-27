@@ -1,7 +1,7 @@
 (ns dreambook.html
   (:require [clojure.string :as str]))
 
-(defn escape-syms [s]
+(defn- translate-syms [s]
   (-> s
       (str/replace #"&" "&amp;")
       (str/replace #"(?<!\S)\"([^\"]+)\"(?!\S)"
@@ -27,5 +27,5 @@
          (if hpat
            (let [[_ h txt] hpat
                  hn (count h)]
-             (str "<h" hn ">" (escape-syms txt) "</h" hn ">"))
-           (str "<p>" (escape-syms section) "</p>")))))))
+             (str "<h" hn ">" (translate-syms txt) "</h" hn ">"))
+           (str "<p>" (translate-syms section) "</p>")))))))

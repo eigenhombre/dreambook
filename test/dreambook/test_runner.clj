@@ -10,6 +10,7 @@ https://github.com/typedclojure/typedclojure/blob/main/script-test/test_runner.c
 (def ^:private test-nses
   '{"test/dreambook/dates_test.clj" dreambook.dates-test
     "test/dreambook/md_test.clj" dreambook.md-test
+    "test/dreambook/model_test.clj" dreambook.model-test
     "test/dreambook/html_test.clj" dreambook.html-test})
 
 (defn- check-missing! []

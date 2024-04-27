@@ -31,11 +31,11 @@
                             yr mo)
                     (str/join
                      "\n"
-                     (for [{:keys [date id txt]}
+                     (for [{:keys [date id body]}
                            (m/dreams-for-year-month yr mo dreams)]
                        (format "### %s\n\n%s"
                                (d/format-date-for-section date)
-                               (org->md txt))))))))))))
+                               (org->md body))))))))))))
 
 (defn- dreams-as-md [dreams]
   (format-dreams-md dreams))
@@ -56,7 +56,7 @@
   (str/join
    "\n"
    [(format "# %s\n\n" (d/format-date-for-section (:date dream)))
-    (org->md (:txt dream))]))
+    (org->md (:body dream))]))
 
 ;; Unused for the moment:
 (defn random-dream-str [dreams-path]
@@ -83,20 +83,18 @@ these give day most us"
    (map #(str/join " " %)
         (partition n (str/split s #"\s+")))))
 
-(defn- nopunct [s]
-  (str/replace s #"[,-\.\?\\\[\]\(\)\-–\"“”$’]*" ""))
-
 (defn- normalize [w]
-  (->> w
-       str/lower-case
-       nopunct))
+  (-> w
+      str/lower-case
+      (str/replace #"’" "'")
+      (str/replace #"[#,-\.\?\\\[\]\(\)\-–\"“”$]*" "")))
 
 (defn dreamwords-str [dreamsfile]
   (let [dreams (->> dreamsfile
                     slurp
                     m/parse-dreams)
         tokens (->> dreams
-                    (map :txt)
+                    (map :body)
                     (mapcat #(str/split % #"\s+|\-"))
                     (map normalize))]
     (->> tokens
@@ -121,8 +119,7 @@ these give day most us"
 
 (defn epub [{:keys [coverfile dreamsfile introfile collophonfile] :as opts}]
   (let [raw-dreams (slurp dreamsfile)
-        parsed-dreams (->> raw-dreams
-                           m/parse-dreams)
+        parsed-dreams (m/parse-dreams raw-dreams)
         starting-md (->> introfile
                          slurp
                          org/strip-frontmatter

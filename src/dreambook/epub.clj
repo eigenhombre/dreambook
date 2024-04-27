@@ -202,10 +202,10 @@
               (let [dreams (m/dreams-for-year-month year month dreams)]
                 [(str month ", " year)
                  (str/join "\n\n"
-                           (for [{:keys [date id txt]} dreams]
+                           (for [{:keys [date id body]} dreams]
                              (format "<h3>%s</h3>\n%s"
                                      (d/format-date-for-section date)
-                                     txt)))]))
+                                     body)))]))
             (md-as-chapters collophon))))
 
 (defn mk-epub [{:keys [parsed-dreams

@@ -17,5 +17,7 @@
       " \"enhuges\" " "<p> &#8220;enhuges&#8221; </p>"
       " *over* " "<p> <em>over</em> </p>"
       "# header" "<h1>header</h1>"
+      "## header" "<h2>header</h2>"
+      "### header" "<h3>header</h3>"
       "~~strikethrough~~" "<p><s>strikethrough</s></p>"
       "`foobloo`" "<p><code>foobloo</code></p>")))

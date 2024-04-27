@@ -2,22 +2,34 @@
   (:require [dreambook.dates :as d]
             [dreambook.org :as org]))
 
-(defn parse-dreams [s]
-  (let [section-bunches
+(defn- maybe-parse-date [s]
+  (when (d/is-date s)
+    (d/parse-date s)))
+
+(defn get-year-content-chunks [s]
+  (let [year-headed-sections
         (->> s
-             org/split-headers-and-body
+             ;; Get rid of Org preamble:
+             (org/split-headers-and-body)
              second
-             org/convert-body-to-sections
+             ;; Find headers and their content:
+             (org/convert-body-to-sections)
              rest
              (remove #{"\n"})
+             ;; Split it up by year:
              (partition-by (comp #{:h1} first))
              (partition 2))]
-    (for [[[[_ a]] b] section-bunches
-          [[_ day-str] txt] (partition 2 b)
-          :let [d (d/parse-date day-str)]]
+    (for [[[[_ a]] content] year-headed-sections]
       {:year (Integer. a)
-       :date d
-       :txt txt})))
+       :content content})))
+
+(defn parse-dreams [s]
+  (let [year-content-chunks (get-year-content-chunks s)]
+    (for [{:keys [year content]} year-content-chunks
+          [[_ day-str] body] (partition 2 content)]
+      {:year year
+       :date (maybe-parse-date day-str)
+       :body body})))
 
 (defn dream-dates [dreams]
   (map :date dreams))

@@ -8,6 +8,9 @@
 
 (def ^:private fmt (DateTimeFormatter/ofPattern "<yyyy-MM-dd EEE>"))
 
+(defn is-date [s]
+  (re-matches org-date-pattern s))
+
 (defn parse-date [s]
   (LocalDate/parse s fmt))
 
