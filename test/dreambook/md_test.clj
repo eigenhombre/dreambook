@@ -27,6 +27,7 @@
       "*** a\n" "### a\n"
       "=code=" "`code`"
       " =code= " " `code` "
+      " _vertically_ " " <u>vertically</u> "
       ;; Strikethrough:
       "+foo+" "~~foo~~"
       ;; Stripping frontmatter:

@@ -24,6 +24,10 @@ template](https://github.com/eigenhombre/minpub).
 The resulting product is relatively fast, running in about a quarter
 of a second for my roughly 400-entry dream journal.
 
+The project as a whole is described at length in the blog post,
+[Wrangling Half a Thousand
+Dreams](http://johnj.com/posts/wrangling-dreams/).
+
 ## Requirements
 
 - [Babashka](https://github.com/babashka/babashka), a fast-starting Clojure interpreter for scripts.
